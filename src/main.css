@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Colors */
+  --black: #181818;
+  --white: #f8f8f8;
+
+  /* Sizes */
+  --huge: 64px;
+  --large: 32px;
+  --medium: 16px;
+  --small: 8px;
+  --tiny: 4px;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--white);
+  font-family: sans-serif;
+  margin: 0px;
+}
