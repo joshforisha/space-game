@@ -12,6 +12,7 @@ export interface World {
   gravity: Gravity;
   hydration: number;
   id: string;
+  metal: number;
   name: string;
   size: Size;
   temperature: Temperature;
@@ -85,6 +86,7 @@ export function generateWorld(name: string, maxSize?: Size): World {
   const temperature = genTemperature(atmosphere);
   const vegetation = genVegetation(temperature, hydration);
   const biomass = genBiomass(size, vegetation);
+  const metal = genMetal(size);
 
   return {
     atmosphere,
@@ -92,6 +94,7 @@ export function generateWorld(name: string, maxSize?: Size): World {
     gravity,
     hydration,
     id: uuid(),
+    metal,
     name,
     size,
     temperature,
@@ -141,8 +144,8 @@ function genGravity(size: Size): Gravity {
   return weightedItem(items);
 }
 
-function genHydration(atmos: Atmosphere): number {
-  switch (atmos) {
+function genHydration(atmosphere: Atmosphere): number {
+  switch (atmosphere) {
     case Atmosphere.Zero:
       return 0;
     case Atmosphere.Thin:
@@ -153,6 +156,21 @@ function genHydration(atmos: Atmosphere): number {
       return randomInt(20, 100);
     case Atmosphere.Impenetrable:
       return randomInt(50, 100);
+  }
+}
+
+function genMetal(size: Size): number {
+  switch (size) {
+    case Size.Tiny:
+      return randomInt(10, 100);
+    case Size.Small:
+      return randomInt(25, 250);
+    case Size.Medium:
+      return randomInt(50, 500);
+    case Size.Large:
+      return randomInt(100, 1000);
+    case Size.Huge:
+      return randomInt(200, 2000);
   }
 }
 

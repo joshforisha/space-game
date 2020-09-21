@@ -78,17 +78,22 @@ function Main() {
         <Slab label="Size">{world.size}</Slab>
         <Slab label="Atmosphere">{world.atmosphere}</Slab>
         <Slab label="Gravity">{world.gravity}</Slab>
+        <Slab label="Temperature">{world.temperature}</Slab>
+      </Slabs>
+      <Slabs>
         <Slab label="Hydration">
           {world.hydration}
           <Unit>%</Unit>
         </Slab>
-        <Slab label="Temperature">{world.temperature}</Slab>
         <Slab label="Vegetation">
           {world.vegetation}
           <Unit>%</Unit>
         </Slab>
         <Slab label="Biomass">
           {world.biomass}&thinsp;<Unit>T/&#273;</Unit>
+        </Slab>
+        <Slab label="Metal">
+          {world.metal}&thinsp;<Unit>T/&#273;</Unit>
         </Slab>
       </Slabs>
       <Button onClick={() => setWorld(generateWorld("Test"))}>Generate</Button>
