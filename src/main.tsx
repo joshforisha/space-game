@@ -1,11 +1,11 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Button } from "~/view/button";
-import { generateWorld } from "~/data/world";
-import { leftPad } from "~/lib/string";
-import { randomInt } from "~/lib/number";
+import { ModelProvider } from "~/view/model";
+import { ResourcesPanel } from "~/view/resources-panel";
+import { Slab, Unit } from "~/view/slab";
+import { generateWorld } from "~/lib/world";
 import { render } from "react-dom";
-import { Slab } from "~/view/slab";
 
 const Name = styled.h2`
   font-size: 2.4rem;
@@ -14,90 +14,55 @@ const Name = styled.h2`
   margin: var(--large) 0px 0px;
 `;
 
-const Secs = styled.span`
-  font-size: 0.8em;
-
-  &:before {
-    content: ".";
-  }
-`;
-
 const Slabs = styled.div`
   display: flex;
   flex-wrap: wrap;
-`;
 
-const Unit = styled.span`
-  font-size: 0.8em;
-  opacity: 0.6;
+  & > ${Slab} {
+    margin-right: var(--large);
+  }
 `;
 
 const View = styled.div`
   margin: var(--large);
 `;
 
-function ClockSlab() {
-  const [mhours, setMHours] = React.useState();
-  const [msecs, setMSecs] = React.useState();
-  React.useEffect(() => {
-    function tick() {
-      const now = Date.now();
-      setMHours(leftPad(Math.floor((now % 1e8) / 1e5).toString(), 3, "0"));
-      setMSecs(leftPad(Math.floor((now % 1e5) / 1000).toString(), 2, "0"));
-      setTimeout(tick, 1000 - (now % 1000));
-    }
-    tick();
-  }, []);
-  return (
-    <Slab label="Time">
-      {mhours}
-      <Secs>{msecs}</Secs>
-    </Slab>
-  );
-}
-
 function Main() {
   const [world, setWorld] = React.useState(generateWorld("Test"));
   console.log(world);
+
   return (
-    <View>
-      <Slabs>
-        <ClockSlab />
-        <Slab label="Credits">
-          {randomInt(1000, 9999)}&thinsp;<Unit>Cr</Unit>
-        </Slab>
-        <Slab label="Biomass">
-          {randomInt(1000, 9999)}&thinsp;<Unit>T</Unit>
-        </Slab>
-        <Slab label="Metal">
-          {randomInt(1000, 9999)}&thinsp;<Unit>T</Unit>
-        </Slab>
-      </Slabs>
-      <Name>{world.name}</Name>
-      <Slabs>
-        <Slab label="Size">{world.size}</Slab>
-        <Slab label="Atmosphere">{world.atmosphere}</Slab>
-        <Slab label="Gravity">{world.gravity}</Slab>
-        <Slab label="Temperature">{world.temperature}</Slab>
-      </Slabs>
-      <Slabs>
-        <Slab label="Hydration">
-          {world.hydration}
-          <Unit>%</Unit>
-        </Slab>
-        <Slab label="Vegetation">
-          {world.vegetation}
-          <Unit>%</Unit>
-        </Slab>
-        <Slab label="Biomass">
-          {world.biomass}&thinsp;<Unit>T/&#273;</Unit>
-        </Slab>
-        <Slab label="Metal">
-          {world.metal}&thinsp;<Unit>T/&#273;</Unit>
-        </Slab>
-      </Slabs>
-      <Button onClick={() => setWorld(generateWorld("Test"))}>Generate</Button>
-    </View>
+    <ModelProvider>
+      <ResourcesPanel />
+      <View>
+        <Name>{world.name}</Name>
+        <Slabs>
+          <Slab label="Size">{world.size}</Slab>
+          <Slab label="Atmosphere">{world.atmosphere}</Slab>
+          <Slab label="Gravity">{world.gravity}</Slab>
+          <Slab label="Temperature">{world.temperature}</Slab>
+        </Slabs>
+        <Slabs>
+          <Slab label="Hydration">
+            {world.hydration}
+            <Unit>%</Unit>
+          </Slab>
+          <Slab label="Vegetation">
+            {world.vegetation}
+            <Unit>%</Unit>
+          </Slab>
+          <Slab label="Biomass">
+            {world.biomass}&thinsp;<Unit>t/&#273;</Unit>
+          </Slab>
+          <Slab label="Metal">
+            {world.metal}&thinsp;<Unit>t/&#273;</Unit>
+          </Slab>
+        </Slabs>
+        <Button onClick={() => setWorld(generateWorld("Test"))}>
+          Generate
+        </Button>
+      </View>
+    </ModelProvider>
   );
 }
 

@@ -1,8 +1,8 @@
-import { Atmosphere } from "~/data/world/atmosphere";
-import { Gravity } from "~/data/world/gravity";
+import { Atmosphere } from "~/lib/world/atmosphere";
+import { Gravity } from "~/lib/world/gravity";
+import { Size, randomSizeUnder } from "~/lib/world/size";
+import { Temperature } from "~/lib/world/temperature";
 import { clamp, randomInt } from "~/lib/number";
-import { Size, randomSizeUnder } from "~/data/world/size";
-import { Temperature } from "~/data/world/temperature";
 import { v4 as uuid } from "uuid";
 import { weightedItem } from "~/lib/array";
 

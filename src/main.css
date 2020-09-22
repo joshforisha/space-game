@@ -4,8 +4,13 @@
 
 :root {
   /* Colors */
-  --black: #181818;
-  --white: #f8f8f8;
+  --black: #101010;
+  --blue: #3fdeff;
+  --green: #9eff5a;
+  --purple: #b984ff;
+  --red: #f8754a;
+  --white: #f0f0f0;
+  --yellow: #feff56;
 
   /* Sizes */
   --huge: 64px;
@@ -13,11 +18,15 @@
   --medium: 16px;
   --small: 8px;
   --tiny: 4px;
+
+  /* Transitions */
+  --fast: 50ms ease-in-out;
+  --slow: 250ms ease-in-out;
 }
 
 body {
   background-color: var(--black);
   color: var(--white);
-  font-family: sans-serif;
+  font-family: "Rubik", sans-serif;
   margin: 0px;
 }
