@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ClockSlab } from "~/view/clock-slab";
 import { Slab, Unit } from "~/view/slab";
 import { useModel } from "~/view/model";
-import { withCommas } from "~/lib/number";
+import { withCommas, withPrefix } from "~/lib/number";
 
 const Panel = styled.div`
   display: flex;
@@ -16,22 +16,27 @@ const Panel = styled.div`
 `;
 
 export function ResourcesPanel(): React.FC {
-  const [{ biomass, credits, energy, metal }] = useModel();
+  const [model] = useModel();
+
+  const [biomass, biomassPrefix] = withPrefix(model.biomass);
+  const [credits, creditsPrefix] = withPrefix(model.credits);
+  const [energy, energyPrefix] = withPrefix(model.energy);
+  const [metal, metalPrefix] = withPrefix(model.metal);
 
   return (
     <Panel>
       <ClockSlab />
       <Slab label="Credits">
-        {withCommas(credits)}&thinsp;<Unit>Cr</Unit>
+        {withCommas(credits)}&thinsp;<Unit>{creditsPrefix}Cr</Unit>
       </Slab>
       <Slab label="Biomass">
-        {withCommas(biomass)}&thinsp;<Unit>t</Unit>
+        {withCommas(biomass)}&thinsp;<Unit>{biomassPrefix}t</Unit>
       </Slab>
       <Slab label="Energy">
-        {withCommas(energy)}&thinsp;<Unit>W</Unit>
+        {withCommas(energy)}&thinsp;<Unit>{energyPrefix}W</Unit>
       </Slab>
       <Slab label="Metal">
-        {withCommas(metal)}&thinsp;<Unit>t</Unit>
+        {withCommas(metal)}&thinsp;<Unit>{metalPrefix}t</Unit>
       </Slab>
     </Panel>
   );

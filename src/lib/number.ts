@@ -13,3 +13,10 @@ export function randomInt(min: number, max: number): number {
 export function withCommas(num: number): string {
   return num.toString().replace(/(\d)(?=(\d{3})+$)/g, (c) => `${c},`);
 }
+
+export function withPrefix(num: number): [number, string] {
+  if (num >= 1e10) return [Math.floor(num / 1e9), "G"];
+  if (num >= 1e7) return [Math.floor(num / 1e6), "M"];
+  if (num >= 1e4) return [Math.floor(num / 1e3), "k"];
+  return [num, ""];
+}
