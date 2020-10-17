@@ -28,5 +28,6 @@ body {
   background-color: var(--black);
   color: var(--white);
   font-family: "Rubik", sans-serif;
+  line-height: 1.5;
   margin: 0px;
 }

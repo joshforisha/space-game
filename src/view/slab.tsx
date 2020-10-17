@@ -12,11 +12,6 @@ const Label = styled.label`
   text-transform: uppercase;
 `
 
-export const Unit = styled.span`
-  font-size: 0.8em;
-  opacity: 0.6;
-`
-
 const Value = styled.span`
   display: block;
   font-size: 1.6rem;

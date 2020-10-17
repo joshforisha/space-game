@@ -1,7 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { ClockSlab } from '~/view/clock-slab'
-import { Slab, Unit } from '~/view/slab'
+import { Slab } from '~/view/slab'
+import { Unit } from '~/view/unit'
 import { useModel } from '~/view/model'
 import { withCommas, withPrefix } from '~/lib/number'
 
