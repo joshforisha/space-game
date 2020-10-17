@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Button = styled.button`
   align-items: center;
@@ -14,4 +14,4 @@ export const Button = styled.button`
   outline: none;
   padding: 0px var(--medium);
   text-transform: uppercase;
-`;
+`

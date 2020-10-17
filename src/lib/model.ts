@@ -1,6 +1,6 @@
-import { Action } from "~/lib/actions";
-import { StarSystem } from "~/lib/star-system";
-import { randomInt } from "~/lib/number";
+import { Action } from '~/lib/actions'
+import { StarSystem } from '~/lib/star-system'
+import { randomInt } from '~/lib/number'
 
 export interface Model {
   biomass: number;
@@ -15,12 +15,12 @@ export const initialModel: Model = {
   credits: 0,
   energy: randomInt(0, 999999),
   metal: randomInt(0, 999999),
-  starSystems: [],
-};
+  starSystems: []
+}
 
-export function update(model: Model, action: Action): Model {
+export function update (model: Model, action: Action): Model {
   switch (action.type) {
     default:
-      return model;
+      return model
   }
 }

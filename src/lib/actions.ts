@@ -1,5 +1,5 @@
 export enum ActionType {
-  NoOp = "NOOP",
+  NoOp = 'NOOP',
 }
 
 export interface Action {

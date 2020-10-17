@@ -1,21 +1,21 @@
-import * as React from "react";
-import styled from "styled-components";
+import * as React from 'react'
+import styled from 'styled-components'
 
 const Container = styled.div`
   transition: color var(--slow);
-`;
+`
 
 const Label = styled.label`
   display: block;
   font-size: 0.8em;
   opacity: 0.6;
   text-transform: uppercase;
-`;
+`
 
 export const Unit = styled.span`
   font-size: 0.8em;
   opacity: 0.6;
-`;
+`
 
 const Value = styled.span`
   display: block;
@@ -23,7 +23,7 @@ const Value = styled.span`
   font-weight: 300;
   line-height: 1;
   margin-top: var(--medium);
-`;
+`
 
 interface Props {
   children?: React.ReactNode;
@@ -31,13 +31,13 @@ interface Props {
   label: string;
 }
 
-function _Slab({ children, className, label }: Props): React.FC {
+function _Slab ({ children, className, label }: Props): React.FC {
   return (
     <Container className={className}>
       <Value>{children}</Value>
       <Label>{label}</Label>
     </Container>
-  );
+  )
 }
 
-export const Slab = styled(_Slab)``;
+export const Slab = styled(_Slab)``

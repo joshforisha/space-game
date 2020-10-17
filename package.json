@@ -1,8 +1,31 @@
 {
   "private": true,
   "scripts": {
+    "format": "standardx --fix src/**/*.ts*",
     "start": "parcel serve src/index.html",
     "test": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/parser": "^4.4.1",
+    "eslint": "^7.11.0",
+    "eslint-plugin-react": "^7.21.4",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.2",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "standardx": "^5.0.0",
+    "styled-components": "^5.2.0",
+    "typescript": "^4.0.3",
+    "uuid": "^8.3.1"
+  },
+  "eslintConfig": {
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "error",
+      "no-use-before-define": "off",
+      "no-unused-vars": "off"
+    }
   },
   "husky": {
     "hooks": {
@@ -11,24 +34,13 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "eslint --fix"
+      "npm run format"
     ]
   },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.1.1",
-    "@typescript-eslint/parser": "^4.1.1",
-    "eslint": "^7.9.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.20.6",
-    "husky": "^4.3.0",
-    "lint-staged": "^10.4.0",
-    "parcel": "^1.12.4",
-    "prettier": "^2.1.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "styled-components": "^5.2.0",
-    "typescript": "^4.0.3",
-    "uuid": "^8.3.0"
+  "standardx": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint/eslint-plugin"
+    ]
   }
 }
