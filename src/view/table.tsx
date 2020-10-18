@@ -9,10 +9,12 @@ const StyledTable = styled.table`
 
 const Td = styled.td`
   font-weight: 300;
+  padding: 0px var(--medium);
   text-align: ${({ align }) => align || 'left'};
 `
 
 const Th = styled.th`
+  padding: 0px var(--medium);
   text-align: ${({ align }) => align || 'left'};
 `
 
@@ -21,6 +23,8 @@ const Tr = styled.tr`
     background-color: rgba(248, 248, 248, 0.025);
   }
 `
+
+export const keyed = (k: string) => (o: Record<string, any>) => o[k]
 
 interface Column {
   align?: string;

@@ -11,8 +11,17 @@ const Panel = styled.div`
   justify-content: space-evenly;
 
   & ${Slab} {
+    background-color: rgba(248, 248, 248, 0.1);
     padding: 0px var(--medium);
     width: 20%;
+
+    &:not(:first-child) {
+      margin-left: 1px;
+    }
+
+    &:not(:last-child) {
+      margin-right: 1px;
+    }
   }
 `
 

@@ -7,6 +7,8 @@
   --black: #101010;
   --blue: #3fdeff;
   --green: #9eff5a;
+  --dark-gray: rgba(16, 16, 16, 0.5);
+  --light-gray: rgba(240, 240, 240, 0.5);
   --purple: #b984ff;
   --red: #f8754a;
   --white: #f0f0f0;

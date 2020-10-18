@@ -3,8 +3,17 @@ import styled from 'styled-components'
 import { Slab } from '~/view/slab'
 import { leftPad } from '~/lib/string'
 
+const Mhours = styled.span`
+  display: inline-block;
+  text-align: right;
+  width: 48px;
+`
+
 const Secs = styled.span`
+  display: inline-block;
   font-size: 0.8em;
+  opacity: 0.75;
+  width: 32px;
 
   &:before {
     content: ".";
@@ -27,7 +36,7 @@ export function ClockSlab (): React.FC {
 
   return (
     <Slab label='Time'>
-      {mhours}
+      <Mhours>{mhours}</Mhours>
       <Secs>{msecs}</Secs>
     </Slab>
   )
