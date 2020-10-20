@@ -1,7 +1,10 @@
-import { Ring } from '~/lib/ring'
+import { Ring, generateRing } from '~/lib/ring'
 import { Size } from '~/lib/world/size'
 import { letters } from '~/lib/string'
-import { randomWeightedItem } from '~/lib/array'
+import { partition, randomInt } from '~/lib/number'
+import { randomWeightedItem, shuffle } from '~/lib/array'
+
+const maxSolidMass = 1e26
 
 enum Atmosphere {
   None = 'None',
@@ -33,9 +36,12 @@ export interface World {
   mass: number;
   name: string;
   size: Size;
+  subEntity?: boolean;
   surface: Surface;
   type: string;
 }
+
+export type Type = World
 
 function classifySize (mass: number): Size {
   if (mass < 1e24) return Size.Tiny
@@ -83,7 +89,7 @@ function genSurface (
   stellarEnergy: number,
   atmosphere: Atmosphere
 ): Surface {
-  if (mass > 48e24) return Surface.Gas
+  if (mass > maxSolidMass) return Surface.Gas
 
   if (stellarEnergy > 1500) {
     return randomWeightedItem([
@@ -108,16 +114,20 @@ function genSurface (
 
 interface GenerateProps {
   mass: number;
-  orbit: number;
+  parentName?: string;
+  parentOrbit?: number;
   starTemperature: number;
   systemName: string;
+  systemOrbit: number;
 }
 
 export function generateWorld ({
   mass,
-  orbit,
+  parentName,
+  parentOrbit,
   starTemperature,
-  systemName
+  systemName,
+  systemOrbit
 }: GenerateProps): World {
   const size = classifySize(mass)
 
@@ -127,17 +137,47 @@ export function generateWorld ({
     [2, Core.Silicate]
   ])
 
-  const stellarEnergy = starTemperature / (orbit ** 2)
+  const stellarEnergy = starTemperature / (systemOrbit ** 2)
   const atmosphere = genAtmosphere(stellarEnergy)
   const surface = genSurface(mass, stellarEnergy, atmosphere)
+
+  let entities = []
+  let name = ''
+  if (typeof parentName === 'string' && typeof parentOrbit === 'number') {
+    name = `${parentName}-${parentOrbit}`
+  } else {
+    name = `${systemName} ${letters[systemOrbit]}`
+
+    const massLimit = 0.8 * Math.min(mass, maxSolidMass)
+    let ringCount = 0
+    if (randomInt(0, 5) < systemOrbit) {
+      entities = shuffle(partition(randomInt(1, systemOrbit)))
+        .map((pct, i) => {
+          const subMass = pct * massLimit
+          if (subMass < 0.5e21) {
+            return generateRing({ mass: subMass, num: ringCount++ })
+          }
+
+          return generateWorld({
+            mass: subMass,
+            parentName: name,
+            parentOrbit: i,
+            starTemperature,
+            systemName,
+            systemOrbit
+          })
+        })
+    }
+  }
 
   return {
     atmosphere,
     core,
-    entities: [],
+    entities,
+    subEntity: typeof parentName === 'string',
     kind: 'World',
     mass,
-    name: `${systemName} ${letters[orbit]}`,
+    name,
     size,
     surface,
     type: classifyType(size, core, surface, atmosphere)

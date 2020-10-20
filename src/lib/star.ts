@@ -9,8 +9,12 @@ export interface Star {
   mass: number;
   name: string;
   stellarClass: string;
+  subtype: number;
   temperature: number;
+  type: string;
 }
+
+export type Type = Star
 
 function genClassification (): [string, number, number] {
   return randomWeightedItem([
@@ -30,12 +34,15 @@ function genName (): string {
 
 export function generateStar (): Star {
   const [stellarClass, mass, temperature] = genClassification()
+  const subtype = randomInt(0, 9)
 
   return {
     kind: 'Star',
     mass,
     name: genName(),
     stellarClass,
-    temperature
+    subtype,
+    temperature,
+    type: `${stellarClass}${subtype}V Star`
   }
 }
