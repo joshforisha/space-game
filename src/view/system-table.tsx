@@ -37,7 +37,13 @@ export function SystemTable ({ system }: Props) {
               : name
           }
         },
-        Type: { view: keyed('type') }
+        Type: { view: keyed('type') },
+        Composition: {
+          view: ({ atmosphere, core, hydration, surface }) =>
+            atmosphere && core && typeof hydration === 'number' && surface
+              ? <>{core.active ? 'Active' : 'Inert'} {core.material} core, {surface} surface ({hydration}% water), {atmosphere} atmosphere</>
+              : null
+        }
       }}
       data={entities}
     />

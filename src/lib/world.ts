@@ -7,16 +7,21 @@ import { randomWeightedItem, shuffle } from '~/lib/array'
 const maxSolidMass = 1e26
 
 enum Atmosphere {
-  None = 'None',
+  No = 'No',
   Thin = 'Thin',
   Standard = 'Standard',
   Thick = 'Thick'
 }
 
-enum Core {
+enum CoreMaterial {
   Carbon = 'Carbon',
-  Metallic = 'Metallic',
+  Iron = 'Iron',
   Silicate = 'Silicate'
+}
+
+interface Core {
+  active: boolean;
+  material: CoreMaterial;
 }
 
 enum Surface {
@@ -32,6 +37,7 @@ export interface World {
   atmosphere: Atmosphere;
   core: Core;
   entities: (Ring | World)[];
+  hydration: number;
   kind: 'World';
   mass: number;
   name: string;
@@ -51,18 +57,19 @@ function classifySize (mass: number): Size {
   return Size.Giant
 }
 
-function classifyType (
-  size: Size,
-  core: Core,
-  surface: Surface,
-  atmosphere: Atmosphere
-): string {
+interface ClassifyProps {
+  atmosphere: Atmosphere;
+  size: Size;
+  surface: Surface;
+}
+
+function classifyType ({ atmosphere, size, surface }: ClassifyProps): string {
   if (surface === Surface.Gas) {
     if (size === Size.Giant) return 'Gas Giant'
     return `${size} Gas World`
   }
 
-  if (atmosphere === Atmosphere.None) return `${size} Chthonian World`
+  if (atmosphere === Atmosphere.No) return `${size} Chthonian World`
 
   if (surface === Surface.Ice) {
     if (size === Size.Giant) return 'Ice Giant'
@@ -75,20 +82,42 @@ function classifyType (
 }
 
 function genAtmosphere (stellarEnergy: number): Atmosphere {
-  if (stellarEnergy > 1500) return Atmosphere.None
+  if (stellarEnergy > 1500) return Atmosphere.No
   return randomWeightedItem([
-    [1, Atmosphere.None],
+    [1, Atmosphere.No],
     [5, Atmosphere.Thin],
     [7, Atmosphere.Standard],
     [5, Atmosphere.Thick]
   ])
 }
 
-function genSurface (
-  mass: number,
-  stellarEnergy: number,
-  atmosphere: Atmosphere
-): Surface {
+interface HydrationProps {
+  atmosphere: Atmosphere;
+}
+
+function genHydration ({ atmosphere }: HydrationProps): number {
+  switch (atmosphere) {
+    case Atmosphere.No: return 0
+    case Atmosphere.Thin: return randomInt(5, 20)
+    case Atmosphere.Standard: return randomInt(20, 80)
+    case Atmosphere.Thick: return randomInt(80, 100)
+  }
+}
+
+interface SurfaceProps {
+  atmosphere: Atmosphere;
+  core: Core;
+  hydration: number;
+  mass: number;
+  stellarEnergy: number;
+}
+
+function genSurface ({
+  core,
+  hydration,
+  mass,
+  stellarEnergy
+}: SurfaceProps): Surface {
   if (mass > maxSolidMass) return Surface.Gas
 
   if (stellarEnergy > 1500) {
@@ -98,15 +127,16 @@ function genSurface (
     ])
   }
 
-  if (stellarEnergy < 300) return Surface.Ice
-
-  let oceanChance = 0
-  if (atmosphere === Atmosphere.Thin) oceanChance = 1
-  else if (atmosphere === Atmosphere.Standard) oceanChance = 2
-  else if (atmosphere === Atmosphere.Thick) oceanChance = 3
+  if (stellarEnergy < 300) {
+    if (core.active && hydration > 50) return Surface.Ocean
+    return randomWeightedItem([
+      [1, Surface.Ice],
+      [1, Surface.Rock]
+    ])
+  }
 
   return randomWeightedItem([
-    [oceanChance, Surface.Ocean],
+    [Math.floor(hydration / 10), Surface.Ocean],
     [5, Surface.Rock],
     [10, Surface.Terrestrial]
   ])
@@ -131,15 +161,25 @@ export function generateWorld ({
 }: GenerateProps): World {
   const size = classifySize(mass)
 
-  const core = randomWeightedItem([
-    [2, Core.Carbon],
-    [2, Core.Metallic],
-    [2, Core.Silicate]
-  ])
+  const core = {
+    active: Math.random() < 0.5,
+    material: randomWeightedItem([
+      [2, CoreMaterial.Carbon],
+      [2, CoreMaterial.Silicate]
+    ])
+  }
 
   const stellarEnergy = starTemperature / (systemOrbit ** 2)
   const atmosphere = genAtmosphere(stellarEnergy)
-  const surface = genSurface(mass, stellarEnergy, atmosphere)
+  const hydration = genHydration({ atmosphere })
+
+  const surface = genSurface({
+    atmosphere,
+    core,
+    hydration,
+    mass,
+    stellarEnergy
+  })
 
   let entities = []
   let name = ''
@@ -174,12 +214,13 @@ export function generateWorld ({
     atmosphere,
     core,
     entities,
+    hydration,
     subEntity: typeof parentName === 'string',
     kind: 'World',
     mass,
     name,
     size,
     surface,
-    type: classifyType(size, core, surface, atmosphere)
+    type: classifyType({ atmosphere, size, surface })
   }
 }
