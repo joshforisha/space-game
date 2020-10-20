@@ -98,9 +98,9 @@ interface HydrationProps {
 function genHydration ({ atmosphere }: HydrationProps): number {
   switch (atmosphere) {
     case Atmosphere.No: return 0
-    case Atmosphere.Thin: return randomInt(5, 20)
-    case Atmosphere.Standard: return randomInt(20, 80)
-    case Atmosphere.Thick: return randomInt(80, 100)
+    case Atmosphere.Thin: return randomInt(0, 20)
+    case Atmosphere.Standard: return randomInt(5, 80)
+    case Atmosphere.Thick: return randomInt(10, 100)
   }
 }
 
