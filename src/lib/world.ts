@@ -66,7 +66,7 @@ function classifyType (
 
   if (surface === Surface.Ice) {
     if (size === Size.Giant) return 'Ice Giant'
-    return `${size} Ocean World`
+    return `${size} Ice World`
   }
 
   if (surface === Surface.Rock) return `${size} Desert World`
