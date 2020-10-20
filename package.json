@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "build": "parcel build --public-url /space-game/ src/index.html",
     "format": "standardx --fix src/**/*.ts*",
     "start": "parcel serve src/index.html",
     "test": "tsc --noEmit"
