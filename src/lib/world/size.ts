@@ -5,7 +5,7 @@ export enum Size {
   Small = 'Small',
   Medium = 'Medium',
   Large = 'Large',
-  Huge = 'Huge',
+  Giant = 'Giant',
 }
 
 export function randomSizeUnder (maxSize: Size | undefined): Size {
@@ -18,7 +18,7 @@ export function randomSizeUnder (maxSize: Size | undefined): Size {
       return randomItem([Size.Tiny, Size.Small, Size.Medium])
     case Size.Large:
       return randomItem([Size.Tiny, Size.Small, Size.Medium, Size.Large])
-    default:
+    case Size.Giant:
       return randomItem(Object.values(Size))
   }
 }

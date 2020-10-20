@@ -1,227 +1,145 @@
-import { Atmosphere } from '~/lib/world/atmosphere'
-import { Gravity } from '~/lib/world/gravity'
-import { Size, randomSizeUnder } from '~/lib/world/size'
-import { Temperature } from '~/lib/world/temperature'
-import { clamp, randomInt } from '~/lib/number'
-import { v4 as uuid } from 'uuid'
-import { weightedItem } from '~/lib/array'
+import { Ring } from '~/lib/ring'
+import { Size } from '~/lib/world/size'
+import { letters } from '~/lib/string'
+import { randomWeightedItem } from '~/lib/array'
+
+enum Atmosphere {
+  None = 'None',
+  Thin = 'Thin',
+  Standard = 'Standard',
+  Thick = 'Thick'
+}
+
+enum Core {
+  Carbon = 'Carbon',
+  Metallic = 'Metallic',
+  Silicate = 'Silicate'
+}
+
+enum Surface {
+  Gas = 'Gas',
+  Ice = 'Ice',
+  Lava = 'Lava',
+  Ocean = 'Ocean',
+  Rock = 'Rock',
+  Terrestrial = 'Terrestrial'
+}
 
 export interface World {
   atmosphere: Atmosphere;
-  biomass: number;
-  gravity: Gravity;
-  hydration: number;
-  id: string;
-  metal: number;
+  core: Core;
+  entities: (Ring | World)[];
+  kind: 'World';
+  mass: number;
   name: string;
   size: Size;
-  temperature: Temperature;
-  vegetation: number;
+  surface: Surface;
+  type: string;
 }
 
-function genAtmosphere (size: Size): Atmosphere {
-  let items = []
-  switch (size) {
-    case Size.Tiny:
-      items = [
-        [2, Atmosphere.Zero],
-        [2, Atmosphere.Thin],
-        [1, Atmosphere.Standard]
-      ]
-      break
-    case Size.Small:
-      items = [
-        [1, Atmosphere.Zero],
-        [2, Atmosphere.Thin],
-        [1, Atmosphere.Standard]
-      ]
-      break
-    case Size.Medium:
-      items = [
-        [1, Atmosphere.Zero],
-        [1, Atmosphere.Thin],
-        [2, Atmosphere.Standard],
-        [1, Atmosphere.Thick]
-      ]
-      break
-    case Size.Large:
-      items = [
-        [1, Atmosphere.Thin],
-        [2, Atmosphere.Standard],
-        [1, Atmosphere.Thick],
-        [1, Atmosphere.Impenetrable]
-      ]
-      break
-    case Size.Huge:
-      items = [
-        [1, Atmosphere.Standard],
-        [2, Atmosphere.Thick],
-        [2, Atmosphere.Impenetrable]
-      ]
-      break
+function classifySize (mass: number): Size {
+  if (mass < 1e24) return Size.Tiny
+  if (mass < 3e24) return Size.Small
+  if (mass < 12e24) return Size.Medium
+  if (mass < 48e24) return Size.Large
+  return Size.Giant
+}
+
+function classifyType (
+  size: Size,
+  core: Core,
+  surface: Surface,
+  atmosphere: Atmosphere
+): string {
+  if (surface === Surface.Gas) {
+    if (size === Size.Giant) return 'Gas Giant'
+    return `${size} Gas World`
   }
-  return weightedItem(items)
-}
 
-function genBiomass (size: Size, vegetation: number): number {
-  switch (size) {
-    case Size.Tiny:
-      return randomInt(0, vegetation)
-    case Size.Small:
-      return randomInt(0, vegetation) * 2
-    case Size.Medium:
-      return randomInt(0, vegetation) * 4
-    case Size.Large:
-      return randomInt(0, vegetation) * 8
-    case Size.Huge:
-      return randomInt(0, vegetation) * 16
+  if (atmosphere === Atmosphere.None) return `${size} Chthonian World`
+
+  if (surface === Surface.Ice) {
+    if (size === Size.Giant) return 'Ice Giant'
+    return `${size} Ocean World`
   }
+
+  if (surface === Surface.Rock) return `${size} Desert World`
+
+  return `${size} ${surface} World`
 }
 
-export function generateWorld (name: string, maxSize?: Size): World {
-  const size = randomSizeUnder(maxSize)
-  const atmosphere = genAtmosphere(size)
-  const gravity = genGravity(size)
-  const hydration = genHydration(atmosphere)
-  const temperature = genTemperature(atmosphere)
-  const vegetation = genVegetation(temperature, hydration)
-  const biomass = genBiomass(size, vegetation)
-  const metal = genMetal(size)
+function genAtmosphere (stellarEnergy: number): Atmosphere {
+  if (stellarEnergy > 1500) return Atmosphere.None
+  return randomWeightedItem([
+    [1, Atmosphere.None],
+    [5, Atmosphere.Thin],
+    [7, Atmosphere.Standard],
+    [5, Atmosphere.Thick]
+  ])
+}
+
+function genSurface (
+  mass: number,
+  stellarEnergy: number,
+  atmosphere: Atmosphere
+): Surface {
+  if (mass > 48e24) return Surface.Gas
+
+  if (stellarEnergy > 1500) {
+    return randomWeightedItem([
+      [2, Surface.Lava],
+      [5, Surface.Rock]
+    ])
+  }
+
+  if (stellarEnergy < 300) return Surface.Ice
+
+  let oceanChance = 0
+  if (atmosphere === Atmosphere.Thin) oceanChance = 1
+  else if (atmosphere === Atmosphere.Standard) oceanChance = 2
+  else if (atmosphere === Atmosphere.Thick) oceanChance = 3
+
+  return randomWeightedItem([
+    [oceanChance, Surface.Ocean],
+    [5, Surface.Rock],
+    [10, Surface.Terrestrial]
+  ])
+}
+
+interface GenerateProps {
+  mass: number;
+  orbit: number;
+  starTemperature: number;
+  systemName: string;
+}
+
+export function generateWorld ({
+  mass,
+  orbit,
+  starTemperature,
+  systemName
+}: GenerateProps): World {
+  const size = classifySize(mass)
+
+  const core = randomWeightedItem([
+    [2, Core.Carbon],
+    [2, Core.Metallic],
+    [2, Core.Silicate]
+  ])
+
+  const stellarEnergy = starTemperature / (orbit ** 2)
+  const atmosphere = genAtmosphere(stellarEnergy)
+  const surface = genSurface(mass, stellarEnergy, atmosphere)
 
   return {
     atmosphere,
-    biomass,
-    gravity,
-    hydration,
-    id: uuid(),
-    metal,
-    name,
+    core,
+    entities: [],
+    kind: 'World',
+    mass,
+    name: `${systemName} ${letters[orbit]}`,
     size,
-    temperature,
-    vegetation
+    surface,
+    type: classifyType(size, core, surface, atmosphere)
   }
-}
-
-function genGravity (size: Size): Gravity {
-  let items = []
-  switch (size) {
-    case Size.Tiny:
-      items = [
-        [3, Gravity.Micro],
-        [1, Gravity.Low],
-        [1, Gravity.Standard]
-      ]
-      break
-    case Size.Small:
-      items = [
-        [1, Gravity.Micro],
-        [3, Gravity.Low],
-        [1, Gravity.Standard]
-      ]
-      break
-    case Size.Medium:
-      items = [
-        [1, Gravity.Low],
-        [3, Gravity.Standard],
-        [1, Gravity.High]
-      ]
-      break
-    case Size.Large:
-      items = [
-        [1, Gravity.Standard],
-        [3, Gravity.High],
-        [1, Gravity.Crushing]
-      ]
-      break
-    case Size.Huge:
-      items = [
-        [1, Gravity.Standard],
-        [2, Gravity.High],
-        [2, Gravity.Crushing]
-      ]
-      break
-  }
-  return weightedItem(items)
-}
-
-function genHydration (atmosphere: Atmosphere): number {
-  switch (atmosphere) {
-    case Atmosphere.Zero:
-      return 0
-    case Atmosphere.Thin:
-      return randomInt(5, 50)
-    case Atmosphere.Standard:
-      return randomInt(10, 100)
-    case Atmosphere.Thick:
-      return randomInt(20, 100)
-    case Atmosphere.Impenetrable:
-      return randomInt(50, 100)
-  }
-}
-
-function genMetal (size: Size): number {
-  switch (size) {
-    case Size.Tiny:
-      return randomInt(10, 100)
-    case Size.Small:
-      return randomInt(25, 250)
-    case Size.Medium:
-      return randomInt(50, 500)
-    case Size.Large:
-      return randomInt(100, 1000)
-    case Size.Huge:
-      return randomInt(200, 2000)
-  }
-}
-
-function genTemperature (atmosphere: Atmosphere): Temperature {
-  switch (atmosphere) {
-    case Atmosphere.Zero:
-      return Temperature.Frozen
-    case Atmosphere.Thin:
-      return weightedItem([
-        [2, Temperature.Frozen],
-        [3, Temperature.Cold]
-      ])
-    case Atmosphere.Standard:
-      return weightedItem([
-        [2, Temperature.Cold],
-        [3, Temperature.Temperate],
-        [2, Temperature.Hot]
-      ])
-    case Atmosphere.Thick:
-      return weightedItem([
-        [1, Temperature.Cold],
-        [2, Temperature.Temperate],
-        [2, Temperature.Hot]
-      ])
-    case Atmosphere.Impenetrable:
-      return weightedItem([
-        [1, Temperature.Temperate],
-        [2, Temperature.Hot],
-        [2, Temperature.Molten]
-      ])
-  }
-}
-
-function genVegetation (temp: Temperature, water: number): number {
-  let val = 0
-  switch (temp) {
-    case Temperature.Frozen:
-      val = randomInt(water - 20, water)
-      break
-    case Temperature.Cold:
-      val = randomInt(water - 10, water + 10)
-      break
-    case Temperature.Temperate:
-      val = randomInt(water - 10, water + 15)
-      break
-    case Temperature.Hot:
-      val = randomInt(water - 15, water + 15)
-      break
-    case Temperature.Molten:
-      val = randomInt(water - 25, water)
-      break
-  }
-  return clamp(0, 100)(val)
 }

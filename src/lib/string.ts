@@ -1,3 +1,9 @@
+export function capitalize (str: string): string {
+  if (str.length < 1) return str
+  if (str.length === 1) return str.toUpperCase()
+  return `${str[0].toUpperCase()}${str.substring(1)}`
+}
+
 export function leftPad (str: string, len: number, ch = ' '): string {
   str = String(str)
   while (str.length < len) {

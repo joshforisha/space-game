@@ -9,7 +9,6 @@ export const Button = styled.button`
   font-weight: 700;
   height: 48px;
   justify-content: center;
-  margin-top: var(--large);
   min-width: 48px;
   outline: none;
   padding: 0px var(--medium);
