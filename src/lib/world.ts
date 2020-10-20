@@ -161,7 +161,7 @@ export function generateWorld ({
           return generateWorld({
             mass: subMass,
             parentName: name,
-            parentOrbit: i,
+            parentOrbit: i + 1,
             starTemperature,
             systemName,
             systemOrbit
