@@ -12,6 +12,15 @@ export function leftPad (str: string, len: number, ch = ' '): string {
   return str
 }
 
+export function plural (
+  num: number,
+  str: string,
+  set = (s: string) => `${s}s`
+): string {
+  if (num === 1) return `${num} ${str}`
+  return `${num} ${set(str)}`
+}
+
 export const letters = [
   'a',
   'b',

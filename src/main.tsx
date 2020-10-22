@@ -12,7 +12,7 @@ const MainContainer = styled.div`
     "CrewPanel SystemSelection"
     "CrewPanel WorldSelection";
   grid-template-columns: 265px auto;
-  grid-template-rows: calc(192px + 2 * var(--medium)) auto;
+  grid-template-rows: calc(192px + 2 * var(--large)) auto;
   height: 100vh;
   width: 100%;
 `

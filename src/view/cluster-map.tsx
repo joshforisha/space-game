@@ -26,7 +26,6 @@ const Circle = styled.circle`
 
 const Svg = styled.svg`
   height: ${svgSize}px;
-  margin: var(--medium);
   width: ${svgSize}px;
 `
 
