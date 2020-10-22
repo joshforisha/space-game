@@ -1,16 +1,30 @@
 import * as React from 'react'
-import { ClusterMap } from '~/view/cluster-map'
+import styled from 'styled-components'
+import { CrewPanel } from '~/view/crew-panel'
 import { ModelProvider } from '~/view/model'
-import { ResourcesPanel } from '~/view/resources-panel'
-import { SystemTable } from '~/view/system-table'
+import { SystemSelection } from '~/view/system-selection'
+import { WorldSelection } from '~/view/world-selection'
 import { render } from 'react-dom'
+
+const MainContainer = styled.div`
+  display: grid;
+  grid-template-areas:
+    "CrewPanel SystemSelection"
+    "CrewPanel WorldSelection";
+  grid-template-columns: 265px auto;
+  grid-template-rows: calc(192px + 2 * var(--medium)) auto;
+  height: 100vh;
+  width: 100%;
+`
 
 function Main () {
   return (
     <ModelProvider>
-      <ResourcesPanel />
-      <ClusterMap />
-      <SystemTable />
+      <MainContainer>
+        <CrewPanel />
+        <SystemSelection />
+        <WorldSelection />
+      </MainContainer>
     </ModelProvider>
   )
 }

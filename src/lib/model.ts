@@ -4,22 +4,16 @@ import { initialize } from '~/lib/array'
 import { randomInt } from '~/lib/number'
 
 export interface Model {
-  biomass: number;
   credits: number;
   currentSystem: StarSystem;
-  energy: number;
-  metal: number;
   starSystems: StarSystem[];
 }
 
 const starSystems = initialize(9, () => generateStarSystem())
 
 export const initialModel: Model = {
-  biomass: randomInt(0, 999999),
-  credits: 0,
+  credits: randomInt(0, 999999999),
   currentSystem: starSystems[4],
-  energy: randomInt(0, 999999),
-  metal: randomInt(0, 999999),
   starSystems
 }
 

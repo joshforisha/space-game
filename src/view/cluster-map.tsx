@@ -24,35 +24,20 @@ const Circle = styled.circle`
   `}
 `
 
-const Container = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  padding: var(--medium);
-`
-
-const SystemName = styled.span`
-  font-size: 1.6rem;
-  line-height: 1;
-  margin-top: var(--medium);
-`
-
 const Svg = styled.svg`
   height: ${svgSize}px;
+  margin: var(--medium);
   width: ${svgSize}px;
 `
 
 export function ClusterMap () {
   const [{ currentSystem, starSystems }, dispatch] = useModel()
-  const [displayName, setDisplayName] = React.useState(currentSystem.name)
 
   const systemCircles = starSystems.map((system, i) =>
     <Circle
       current={system.id === currentSystem.id}
       key={system.id}
       onClick={() => dispatch(selectSystem(system.id))}
-      onMouseOver={() => setDisplayName(system.name)}
-      onMouseOut={() => setDisplayName(currentSystem.name)}
       r='19'
       cx={20 + (i % 3) * 76}
       cy={20 + (Math.floor(i / 3)) * 76}
@@ -60,11 +45,8 @@ export function ClusterMap () {
   )
 
   return (
-    <Container>
-      <Svg viewBox={`0 0 ${svgSize} ${svgSize}`}>
-        {systemCircles}
-      </Svg>
-      <SystemName>{displayName}</SystemName>
-    </Container>
+    <Svg viewBox={`0 0 ${svgSize} ${svgSize}`}>
+      {systemCircles}
+    </Svg>
   )
 }
