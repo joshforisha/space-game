@@ -44,7 +44,9 @@ export function Table ({ columns, data }: Props) {
 
   const bodyRows = data.map((record, i) => {
     const cells = Object.entries(columns)
-      .map(([key, { align, view }]) => <Td align={align} key={key}>{view(record)}</Td>)
+      .map(([key, { align, view }]) =>
+        <Td align={align} key={key}>{view(record)}</Td>
+      )
     return <Tr key={i}>{cells}</Tr>
   })
 

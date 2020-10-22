@@ -29,12 +29,14 @@ function genClassification (): [string, number, number] {
 }
 
 function genName (): string {
-  const roll = Math.random()
-  if (roll < 0.5) {
-    return (`${randomItem(letters)}${randomItem(letters)} ${randomInt(1000, 9999)}`).toUpperCase()
+  const a = randomItem(letters)
+  const b = randomItem(letters)
+
+  if (Math.random() < 0.5) {
+    return (`${a}${b} ${randomInt(1000, 9999)}`).toUpperCase()
   }
 
-  return capitalize(`${randomItem(letters)}${randomInt(100, 999)}${randomItem(letters)}`)
+  return capitalize(`${a}${randomInt(100, 999)}${b}`)
 }
 
 export function generateStar (): Star {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { StarSystem } from '~/lib/star-system'
 import { Table, keyed } from '~/view/table'
+import { useModel } from '~/view/model'
 
 const SubEntity = styled.span`
   display: block;
@@ -14,12 +14,10 @@ const SubEntity = styled.span`
   }
 `
 
-interface Props {
-  system: StarSystem;
-}
+export function SystemTable () {
+  const [{ currentSystem }] = useModel()
 
-export function SystemTable ({ system }: Props) {
-  const entities = system.entities
+  const entities = currentSystem.entities
     .reduce((es, e) =>
       'entities' in e
         ? [...es, e, ...e.entities]
@@ -37,13 +35,7 @@ export function SystemTable ({ system }: Props) {
               : name
           }
         },
-        Type: { view: keyed('type') },
-        Composition: {
-          view: ({ atmosphere, core, hydration, surface }) =>
-            atmosphere && core && typeof hydration === 'number' && surface
-              ? <>{core.active ? 'Active' : 'Inert'} {core.material} core, {surface} surface ({hydration}% liquid), {atmosphere} atmosphere</>
-              : null
-        }
+        Type: { view: keyed('type') }
       }}
       data={entities}
     />

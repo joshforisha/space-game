@@ -7,8 +7,12 @@ const Container = styled.div`
 `
 
 const Pip = styled.div`
-  background-color: ${({ active }) => active ? 'var(--white)' : 'transparent'};
-  border: 1px solid ${({ active }) => active ? 'var(--white)' : 'var(--light-gray)'};
+  background-color: ${({ active }) => active
+    ? 'var(--white)'
+    : 'transparent'};
+  border: 1px solid ${({ active }) => active
+    ? 'var(--white)'
+    : 'var(--light-gray)'};
   border-radius: var(--small);
   height: var(--small);
   width: var(--small);

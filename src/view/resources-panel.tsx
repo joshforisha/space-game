@@ -11,7 +11,7 @@ const Panel = styled.div`
   justify-content: space-evenly;
 
   & ${Slab} {
-    background-color: rgba(248, 248, 248, 0.1);
+    background-color: var(--dark-gray);
     padding: 0px var(--medium);
     width: 20%;
 

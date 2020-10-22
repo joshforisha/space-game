@@ -24,6 +24,7 @@
   "eslintConfig": {
     "rules": {
       "@typescript-eslint/no-unused-vars": "error",
+      "max-len": ["error", { "code": 80 }],
       "no-use-before-define": "off",
       "no-unused-vars": "off"
     },

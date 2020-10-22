@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Button } from '~/view/button'
+import { useModel } from '~/view/model'
 
 const Header = styled.header`
   align-items: center;
@@ -17,18 +17,12 @@ const Name = styled.div`
   flex: 1;
 `
 
-interface Props {
-  onNext?: () => void;
-  onPrevious?: () => void;
-  systemName: string;
-}
+export function SystemHeader () {
+  const [{ currentSystem }] = useModel()
 
-export function SystemHeader ({ onNext, onPrevious, systemName }: Props) {
   return (
     <Header>
-      <Button onClick={onPrevious}>&lang;&ensp;Prev</Button>
-      <Name>{systemName}</Name>
-      <Button onClick={onNext}>Next&ensp;&rang;</Button>
+      <Name>{currentSystem.name}</Name>
     </Header>
   )
 }
