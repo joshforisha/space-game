@@ -1,14 +1,17 @@
-import { Belt, generateBelt } from '~/lib/belt'
+import { Entity } from '~/lib/entity'
+import { Jumpgate, generateJumpgate } from '~/lib/jumpgate'
 import { Star, generateStar } from '~/lib/star'
-import { World, generateWorld } from '~/lib/world'
+import { generateBelt } from '~/lib/belt'
+import { generateWorld } from '~/lib/world'
 import { initialize, randomWeightedItem } from '~/lib/array'
 import { letters } from '~/lib/string'
 import { partition, randomInt } from '~/lib/number'
 import { v4 as uuid } from 'uuid'
 
 export interface StarSystem {
-  entities: (Belt | Star | World)[];
+  entities: Entity[];
   id: string;
+  jumpgate: Jumpgate;
   name: string;
   stars: Star[];
 }
@@ -27,6 +30,8 @@ export function generateStarSystem (): StarSystem {
     star.name = `${systemName} ${letters[i]}`
     return star
   })
+
+  const jumpgate = generateJumpgate({ systemName })
 
   const hottestStarTemperature = stars
     .reduce((t, s) => Math.max(s.temperature, t), 0)
@@ -47,8 +52,9 @@ export function generateStarSystem (): StarSystem {
           systemName,
           systemOrbit: i + stars.length
         })
-      })
+      }),
+    jumpgate
   ]
 
-  return { entities, id: uuid(), name: systemName, stars }
+  return { entities, id: uuid(), jumpgate, name: systemName, stars }
 }

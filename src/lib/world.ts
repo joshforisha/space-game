@@ -3,6 +3,7 @@ import { Size } from '~/lib/world/size'
 import { letters } from '~/lib/string'
 import { partition, randomInt } from '~/lib/number'
 import { randomWeightedItem, shuffle } from '~/lib/array'
+import { v4 as uuid } from 'uuid'
 
 const maxSolidMass = 1e26
 
@@ -38,9 +39,11 @@ export interface World {
   core: Core;
   entities: (Ring | World)[];
   hydration: number;
+  id: string;
   kind: 'World';
   mass: number;
   name: string;
+  parentId?: string;
   size: Size;
   subEntity?: boolean;
   surface: Surface;
@@ -144,6 +147,7 @@ function genSurface ({
 
 interface GenerateProps {
   mass: number;
+  parentId?: string;
   parentName?: string;
   parentOrbit?: number;
   starTemperature: number;
@@ -153,12 +157,14 @@ interface GenerateProps {
 
 export function generateWorld ({
   mass,
+  parentId,
   parentName,
   parentOrbit,
   starTemperature,
   systemName,
   systemOrbit
 }: GenerateProps): World {
+  const id = uuid()
   const size = classifySize(mass)
 
   const core = {
@@ -195,11 +201,16 @@ export function generateWorld ({
         .map((pct, i) => {
           const subMass = pct * massLimit
           if (subMass < 0.5e21) {
-            return generateRing({ mass: subMass, num: ringCount++ })
+            return generateRing({
+              mass: subMass,
+              num: ringCount++,
+              parentId: id
+            })
           }
 
           return generateWorld({
             mass: subMass,
+            parentId: id,
             parentName: name,
             parentOrbit: i + 1,
             starTemperature,
@@ -214,12 +225,14 @@ export function generateWorld ({
     atmosphere,
     core,
     entities,
+    id,
     hydration,
-    subEntity: typeof parentName === 'string',
     kind: 'World',
     mass,
     name,
+    parentId,
     size,
+    subEntity: typeof parentName === 'string',
     surface,
     type: classifyType({ atmosphere, size, surface })
   }

@@ -1,4 +1,5 @@
 import { letters } from '~/lib/string'
+import { v4 as uuid } from 'uuid'
 
 enum Density {
   Thin = 'Thin',
@@ -8,8 +9,10 @@ enum Density {
 
 export interface Ring {
   density: Density;
+  id: string;
   kind: 'Ring';
   name: string;
+  parentId: string;
   subEntity: boolean;
   type: string;
 }
@@ -25,15 +28,18 @@ export type Type = Ring
 interface GenerateProps {
   mass: number;
   num: number;
+  parentId: string;
 }
 
-export function generateRing ({ mass, num }: GenerateProps): Ring {
+export function generateRing ({ mass, num, parentId }: GenerateProps): Ring {
   const density = classifyDensity(mass)
 
   return {
     density,
+    id: uuid(),
     kind: 'Ring',
     name: `Ring ${letters[num]}`,
+    parentId,
     subEntity: true,
     type: `${density} Ring`
   }

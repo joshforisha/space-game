@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { Table, keyed } from '~/view/table'
 import { useModel } from '~/view/model'
 
+const StyledTable = styled(Table)``
+
 const SubEntity = styled.span`
   display: block;
   margin-left: var(--small);
@@ -26,7 +28,7 @@ export function SystemTable () {
     )
 
   return (
-    <Table
+    <StyledTable
       columns={{
         Entity: {
           view: ({ subEntity, name }) => {

@@ -1,10 +1,12 @@
 import { capitalize, letters } from '~/lib/string'
 import { randomFloat, randomInt } from '~/lib/number'
 import { randomItem, randomWeightedItem } from '~/lib/array'
+import { v4 as uuid } from 'uuid'
 
 const solarMass = 1.9887e30
 
 export interface Star {
+  id: string;
   kind: 'Star';
   mass: number;
   name: string;
@@ -44,6 +46,7 @@ export function generateStar (): Star {
   const subtype = randomInt(0, 9)
 
   return {
+    id: uuid(),
     kind: 'Star',
     mass,
     name: genName(),
