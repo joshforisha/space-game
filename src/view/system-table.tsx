@@ -16,7 +16,11 @@ const SubEntity = styled.span`
   }
 `
 
-export function SystemTable () {
+interface Props {
+  className?: string;
+}
+
+export function SystemTable ({ className }: Props) {
   const [{ currentSystem }] = useModel()
 
   const entities = currentSystem.entities
@@ -29,6 +33,7 @@ export function SystemTable () {
 
   return (
     <StyledTable
+      className={className}
       columns={{
         Entity: {
           view: ({ subEntity, name }) => {
@@ -40,6 +45,7 @@ export function SystemTable () {
         Type: { view: keyed('type') }
       }}
       data={entities}
+      height={200}
     />
   )
 }

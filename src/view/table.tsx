@@ -7,6 +7,8 @@ const StyledTable = styled.table`
   width: 100%;
 `
 
+const Tbody = styled.tbody``
+
 const Td = styled.td`
   font-weight: 300;
   padding: 0px var(--medium);
@@ -17,6 +19,8 @@ const Th = styled.th`
   padding: 0px var(--medium);
   text-align: ${({ align }) => align || 'left'};
 `
+
+const Thead = styled.thead``
 
 const Tr = styled.tr`
   &:nth-child(2n+1) {
@@ -52,14 +56,14 @@ export function Table ({ columns, data }: Props) {
 
   return (
     <StyledTable>
-      <thead>
+      <Thead>
         <tr>
           {columnHeaders}
         </tr>
-      </thead>
-      <tbody>
+      </Thead>
+      <Tbody>
         {bodyRows}
-      </tbody>
+      </Tbody>
     </StyledTable>
   )
 }
