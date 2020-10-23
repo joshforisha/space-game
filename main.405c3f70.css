@@ -1,0 +1,2 @@
+*{box-sizing:border-box}:root{--black:#101010;--blue:#3fdeff;--green:#9eff5a;--dark-gray:#303030;--light-gray:#d0d0d0;--purple:#b984ff;--red:#f8754a;--white:#f0f0f0;--yellow:#feff56;--huge:64px;--large:32px;--medium:16px;--small:8px;--tiny:4px;--fast:50ms ease-in-out;--slow:250ms ease-in-out}body{background-color:var(--black);color:var(--white);font-family:Rubik,sans-serif;line-height:1.5}body,p{margin:0}
+/*# sourceMappingURL=/space-game/main.405c3f70.css.map */
